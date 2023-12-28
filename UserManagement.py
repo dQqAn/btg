@@ -24,7 +24,8 @@ class UserManagement:
         return False
 
 
-# Sunucu tarafında kullanıcı bilgilerini saklayan dosya yolu
+"""
+ # Sunucu tarafında kullanıcı bilgilerini saklayan dosya yolu
 user_file_path = "users.txt"
 
 # Kullanıcı yönetimi sınıfını başlat
@@ -40,36 +41,4 @@ if login_result:
     print("Başarıyla giriş yapıldı.")
 else:
     print("Kullanıcı adı veya şifre hatalı.")
-
-
-"""
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-
-@app.route('/register', methods=['POST'])
-def register():
-    username = request.form['username']
-    password = request.form['password']
-
-    user_manager.register_user(username, password)
-    return redirect(url_for('index'))
-
-
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.form['username']
-    password = request.form['password']
-
-    if user_manager.login(username, password):
-        return "Başarıyla giriş yapıldı."
-    else:
-        return "Kullanıcı adı veya şifre hatalı."
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
 """
