@@ -3,8 +3,7 @@ import ssl
 import urllib
 from urllib.request import urlopen
 
-# DISCONNECT_MESSAGE = "!DISCONNECT"
-DISCONNECT_MESSAGE = "b'!DISCONNECT'"
+DISCONNECT_MESSAGE = "!DISCONNECT"
 
 if __name__ == '__main__':
 
@@ -30,6 +29,9 @@ if __name__ == '__main__':
     connections = []
     userCount = 0
 
+    FORMAT = "utf-8"
+    SIZE = 1024
+
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((host, port))
     sock.listen()
@@ -38,7 +40,7 @@ if __name__ == '__main__':
         conn, addr = sock.accept()
         connections.append(conn)
         userCount += 1
-        print('Connected with client', userCount)
+        print(f'Connected with client {addr}', userCount)
         server_ssl = ssl.wrap_socket(
             conn,
             server_side=True,
@@ -50,14 +52,23 @@ if __name__ == '__main__':
         connected = True
         while connected:
             # data = server_ssl.recv(1024)
-            data = server_ssl.read()
+            # data = server_ssl.read()
+
+            data_length = server_ssl.recv(SIZE).decode(FORMAT)
+            if not data_length:
+                break
+            data_length = int(data_length)
+            data = server_ssl.recv(data_length).decode(FORMAT)
             if not data:
                 break
             if str(data) == str(DISCONNECT_MESSAGE):
                 print('Disconnected with client', userCount)
                 userCount -= 1
-                conn.close()
+                server_ssl.send("Message received".encode(FORMAT))
+                server_ssl.close()
                 connected = False
+            else:
+                server_ssl.send("Message received".encode(FORMAT))
             print("Data:", data)
 
     # while True:

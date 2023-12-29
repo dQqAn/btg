@@ -11,7 +11,7 @@ class ServerFileTransfer:
         self.sunucu_port = sunucu_port
 
     def dosya_al(self):
-        ssl_baglanti = SecureConnection(self.sunucu_ip, self.sunucu_port)
+        ssl_baglanti = SecureConnection(self.sunucu_ip, self.sunucu_port).connect()
 
         # Dosyanın adını al
         mesaj = ssl_baglanti.recv(1024).decode()
@@ -21,7 +21,7 @@ class ServerFileTransfer:
         dosya_verileri = ssl_baglanti.recv(1024)
 
         # Dosyayı şifresini çözerek hedef konuma kaydet
-        FileEncryption().encrypt_file(dosya_verileri).save(dosya_adi)
+        FileEncryption().encrypt_file(dosya_verileri, "outpath/" + dosya_adi).save(dosya_adi)
 
         # Cevabı gönder
         ssl_baglanti.sendall("basarili".encode())

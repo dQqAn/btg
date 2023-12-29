@@ -43,8 +43,7 @@ while not control:
             print("Başarıyla giriş yapıldı.")
             secure_connection.connect()
             secure_connection.send_message("ada")
-            # secure_connection.send_message("!DISCONNECT")
-            # SecureConnection().establish_connection()
+            secure_connection.send_message("!DISCONNECT")
         else:
             print("Kullanıcı adı veya şifre hatalı.")
     elif login == 2:
@@ -52,8 +51,6 @@ while not control:
         control = True
         print("Kayıt yapıldı.")
         secure_connection.connect()
-        # SecureConnection().send_message("deneme")
-        # SecureConnection().establish_connection()
     else:
         print("Geçersiz komut.")
 

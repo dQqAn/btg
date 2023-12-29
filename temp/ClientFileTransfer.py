@@ -11,14 +11,14 @@ class DosyaTransferi():
         self.sunucu_port = sunucu_port
 
     def dosya_gonder(self, dosya_adi):
-        ssl_baglanti = SecureConnection(self.sunucu_ip, self.sunucu_port)
+        ssl_baglanti = SecureConnection(self.sunucu_ip, self.sunucu_port).connect()
 
         # Dosyanın adını suncuya gönder
         mesaj = "dosya_gonder" + "," + dosya_adi
         ssl_baglanti.sendall(mesaj.encode())
 
         # Dosyayı şifreleyerek gönder
-        dosya_verileri = FileEncryption().dosya_sifrele(dosya_adi)
+        dosya_verileri = FileEncryption().decrypt_file(dosya_adi, "outpath/" + dosya_adi)
         ssl_baglanti.sendall(dosya_verileri)
 
         # Cevabı al

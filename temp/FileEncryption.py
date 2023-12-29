@@ -15,13 +15,12 @@ class FileEncryption:
         self.sender_private_key = sender_private_key
         self.recipient_public_key = recipient_public_key
 
-    """
     def dosya_sifrele(self, dosya_adi):
         with open(dosya_adi, "rb") as f:
             veri = f.read()
 
         # Elliptic Curve Diffie-Hellman şifrelemeyi kullan
-        anahtar = ecdsa.generate_private_key(curve=ecdsa.SECP256K1)
+        anahtar = ecdsa.generate_private_key(curve=ecdsa.SECP256k1)
 
         # Dosyayı şifrele
         encrypted_data = anahtar.encrypt(veri, hashlib.sha256(veri).digest())
@@ -30,10 +29,12 @@ class FileEncryption:
 
     def dosya_desifrele(self, encrypted_data):
         # Elliptic Curve Diffie-Hellman şifrelemeyi kullan
-        anahtar = ecdsa.SigningKey.from_private_bytes(self.private_key)
+        anahtar = ecdsa.SigningKey.from_private_bytes(self.sender_private_key)
 
         # Dosyayı deşifrele
         decrypted_data = anahtar.decrypt
+
+
 """
     def encrypt_file(self, file_path, output_path):
         with open(file_path, 'rb') as file:
@@ -103,12 +104,12 @@ class FileEncryption:
         # Not: Şifreleme kısmında hazır kütüphanelerden faydalanılmayacağı belirtilmişti
         decrypted_data = data  # Bu kısmı güvenli bir şekilde implement etmek gerekir
         return decrypted_data
-
+"""
 
 # Örnek kullanım
-sender_private_key = b"Sender Private Key"  # Örnek olarak belirtilmiş bir private key
-recipient_public_key = b"Recipient Public Key"  # Örnek olarak belirtilmiş bir public key
+# sender_private_key = b"Sender Private Key"  # Örnek olarak belirtilmiş bir private key
+# recipient_public_key = b"Recipient Public Key"  # Örnek olarak belirtilmiş bir public key
 
-file_encryption = FileEncryption(sender_private_key, recipient_public_key)
-file_encryption.encrypt_file("plain.txt", "encrypted.txt")
-file_encryption.decrypt_file("encrypted.txt", "decrypted.txt")
+# file_encryption = FileEncryption(sender_private_key, recipient_public_key)
+# file_encryption.encrypt_file("plain.txt", "encrypted.txt")
+# file_encryption.decrypt_file("encrypted.txt", "decrypted.txt")

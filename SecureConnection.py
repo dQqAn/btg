@@ -5,8 +5,11 @@ from http.client import HTTPSConnection
 from os import system
 from os.path import join
 
-
 # pip install flask
+
+FORMAT = "utf-8"
+SIZE = 1024
+
 
 class SecureConnection:
     def __init__(self, sock, wrap_socket):
@@ -54,7 +57,15 @@ class SecureConnection:
         self.wrap_socket.connect((self.host, self.port))
 
     def send_message(self, message):
-        self.wrap_socket.write(message.encode())
+        # self.wrap_socket.write(message.encode())
+
+        message = message.encode(FORMAT)
+        msg_length = len(message)
+        send_length = str(msg_length).encode(FORMAT)
+        send_length += b' ' * (SIZE - len(send_length))
+        self.wrap_socket.send(send_length)
+        self.wrap_socket.send(message)
+        print(self.wrap_socket.recv(2048).decode(FORMAT))
 
     def establish_connection(self):
         # Socket oluştur
