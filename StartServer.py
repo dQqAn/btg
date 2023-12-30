@@ -7,7 +7,8 @@ DISCONNECT_MESSAGE = "!DISCONNECT"
 
 if __name__ == '__main__':
 
-    logger = FileTransferLogger("file_transfer_log.txt")
+    logger_file_name = "file_transfer_log.txt"
+    logger = FileTransferLogger(logger_file_name)
 
     host = '127.0.0.1'
     # host = socket.gethostbyname(socket.gethostname())
@@ -94,6 +95,9 @@ if __name__ == '__main__':
                     file.write(file_data)
                     server_ssl.send("File data received".encode(FORMAT))
                     file.close()
+                elif str(data) == str("log"):
+                    file = open(logger_file_name, "rb")
+                    server_ssl.send(file.read())
                 else:
                     server_ssl.send("Message received".encode(FORMAT))
                 print("Data:", data)

@@ -84,3 +84,8 @@ class SecureConnection:
         msg = self.wrap_socket.recv(SIZE).decode(FORMAT)
         print(f"[SERVER]: {msg}")
         file.close()
+
+    def show_log(self):
+        data_control = "log".encode(FORMAT)
+        self.wrap_socket.send(data_control)
+        print(self.wrap_socket.recv(2048).decode(FORMAT))
