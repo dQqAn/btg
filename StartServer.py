@@ -54,11 +54,13 @@ if __name__ == '__main__':
             # data = server_ssl.recv(1024)
             # data = server_ssl.read()
 
-            data_length = server_ssl.recv(SIZE).decode(FORMAT)
-            if not data_length:
-                break
-            data_length = int(data_length)
-            data = server_ssl.recv(data_length).decode(FORMAT)
+            # data_length = server_ssl.recv(SIZE).decode(FORMAT)
+            # if not data_length:
+            #     break
+            # data_length = int(data_length)
+            # data = server_ssl.recv(data_length).decode(FORMAT)
+
+            data = server_ssl.recv(SIZE).decode(FORMAT)
             if not data:
                 break
             if str(data) == str(DISCONNECT_MESSAGE):
@@ -67,6 +69,23 @@ if __name__ == '__main__':
                 server_ssl.send("Message received".encode(FORMAT))
                 server_ssl.close()
                 connected = False
+            elif str(data) == str("file"):
+                server_ssl.send("File received".encode(FORMAT))
+
+                filename = server_ssl.recv(SIZE).decode(FORMAT)
+                if not filename:
+                    break
+                print(f"[RECV] Receiving the filename:", filename)
+                file = open(f"data/{filename}", "w")
+                server_ssl.send("Filename received.".encode(FORMAT))
+
+                file_data = server_ssl.recv(SIZE).decode(FORMAT)
+                if not file_data:
+                    break
+                print(f"[RECV] Receiving the file data:", file_data)
+                file.write(file_data)
+                server_ssl.send("File data received".encode(FORMAT))
+                file.close()
             else:
                 server_ssl.send("Message received".encode(FORMAT))
             print("Data:", data)

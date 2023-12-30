@@ -59,13 +59,40 @@ class SecureConnection:
     def send_message(self, message):
         # self.wrap_socket.write(message.encode())
 
+        data_control = "message".encode(FORMAT)
+        # data_length = len(data_control)
+        # send_data_length = str(data_length).encode(FORMAT)
+        # send_data_length += b' ' * (SIZE - len(send_data_length))
+        # self.wrap_socket.send(send_data_length)
+        self.wrap_socket.send(data_control)
+        self.wrap_socket.recv(2048).decode(FORMAT)
+
         message = message.encode(FORMAT)
-        msg_length = len(message)
-        send_length = str(msg_length).encode(FORMAT)
-        send_length += b' ' * (SIZE - len(send_length))
-        self.wrap_socket.send(send_length)
+        # msg_length = len(message)
+        # send_length = str(msg_length).encode(FORMAT)
+        # send_length += b' ' * (SIZE - len(send_length))
+        # self.wrap_socket.send(send_length)
         self.wrap_socket.send(message)
         print(self.wrap_socket.recv(2048).decode(FORMAT))
+
+    def send_file(self, file_name):
+        data_control = "file".encode(FORMAT)
+        # data_length = len(data_control)
+        # send_data_length = str(data_length).encode(FORMAT)
+        # send_data_length += b' ' * (SIZE - len(send_data_length))
+        # self.wrap_socket.send(send_data_length)
+        self.wrap_socket.send(data_control)
+        self.wrap_socket.recv(2048).decode(FORMAT)
+
+        file = open(file_name, "r")
+        data = file.read()
+        self.wrap_socket.send(file_name.encode(FORMAT))
+        msg = self.wrap_socket.recv(SIZE).decode(FORMAT)
+        print(f"[SERVER]: {msg}")
+        self.wrap_socket.send(data.encode(FORMAT))
+        msg = self.wrap_socket.recv(SIZE).decode(FORMAT)
+        print(f"[SERVER]: {msg}")
+        file.close()
 
     def establish_connection(self):
         # Socket oluştur
