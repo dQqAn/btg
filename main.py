@@ -43,7 +43,8 @@ while not control:
             print("Başarıyla giriş yapıldı.")
             secure_connection.connect()
             # secure_connection.send_message("ada")
-            secure_connection.send_file("temp.txt")
+            # secure_connection.send_file("temp.txt")
+            secure_connection.send_file("ert.png")
             # secure_connection.send_message("!DISCONNECT")
         else:
             print("Kullanıcı adı veya şifre hatalı.")

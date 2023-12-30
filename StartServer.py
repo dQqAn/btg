@@ -76,10 +76,12 @@ if __name__ == '__main__':
                 if not filename:
                     break
                 print(f"[RECV] Receiving the filename:", filename)
-                file = open(f"data/{filename}", "w")
+                # file = open(f"data/{filename}", "w")
+                file = open(f"data/{filename}", "wb")
                 server_ssl.send("Filename received.".encode(FORMAT))
 
-                file_data = server_ssl.recv(SIZE).decode(FORMAT)
+                # file_data = server_ssl.recv(SIZE).decode(FORMAT)
+                file_data = server_ssl.recv(SIZE)
                 if not file_data:
                     break
                 print(f"[RECV] Receiving the file data:", file_data)
