@@ -85,6 +85,7 @@ if __name__ == '__main__':
                 if not file_data:
                     break
                 print(f"[RECV] Receiving the file data:", file_data)
+                # print(f"[RECV] Receiving the file data:", file_data.decode('ISO-8859-1'))
                 file.write(file_data)
                 server_ssl.send("File data received".encode(FORMAT))
                 file.close()
