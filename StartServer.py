@@ -101,8 +101,25 @@ if __name__ == '__main__':
                     server_ssl.send("File data received".encode(FORMAT))
                     file.close()
                 elif str(data) == str("log"):
-                    file = open(logger_file_name, "rb")
-                    server_ssl.send(file.read())
+                    server_ssl.send("Log".encode(FORMAT))
+
+                    user_name = server_ssl.recv(SIZE).decode(FORMAT)
+                    if not user_name:
+                        break
+                    server_ssl.send(user_name.encode(FORMAT))
+
+                    user_pwd = server_ssl.recv(SIZE).decode(FORMAT)
+                    if not user_pwd:
+                        break
+                    server_ssl.send(user_pwd.encode(FORMAT))
+
+                    is_admin = user_manager.is_admin(user_name, user_pwd)
+                    if is_admin:
+                        file = open(logger_file_name, "rb")
+                        server_ssl.send(file.read())
+                        file.close()
+                    else:
+                        server_ssl.send("You are not admin.".encode(FORMAT))
                 elif str(data) == str("login"):
                     server_ssl.send("Login".encode(FORMAT))
 

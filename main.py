@@ -34,6 +34,7 @@ while not control:
     login = int(input('Sign in: 1, Sign Up: 2 -> '))
     userName = str(input('userName: '))
     userPwd = str(input('userPwd: '))
+    # is_admin = bool(input('Admin: True or False'))
 
     if login == 1:
         login_result = secure_connection.login("sign_in", userName, userPwd)
@@ -41,9 +42,9 @@ while not control:
         if str(login_result) == "True":
             control = True
             print("Login success.")
-            secure_connection.send_message("yum")
+            # secure_connection.send_message("yum")
             # secure_connection.send_file("temp.txt")
-            # secure_connection.show_log()
+            secure_connection.show_log(userName, userPwd)
             # secure_connection.send_file("ert.png")
             # secure_connection.send_message(DISCONNECT_MESSAGE)
             secure_connection.close_conn()

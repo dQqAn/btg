@@ -86,9 +86,19 @@ class SecureConnection:
         print(f"[SERVER]: {msg}")
         file.close()
 
-    def show_log(self):
+    def show_log(self, user_name, user_password):
         data_control = "log".encode(FORMAT)
         self.wrap_socket.send(data_control)
+        self.wrap_socket.recv(2048).decode(FORMAT)
+
+        temp_user_name = user_name.encode(FORMAT)
+        self.wrap_socket.send(temp_user_name)
+        self.wrap_socket.recv(2048).decode(FORMAT)
+
+        temp_user_password = user_password.encode(FORMAT)
+        self.wrap_socket.send(temp_user_password)
+        self.wrap_socket.recv(2048).decode(FORMAT)
+
         print(self.wrap_socket.recv(2048).decode(FORMAT))
 
     def login(self, login_info, user_name, user_password):
