@@ -14,9 +14,3 @@ class FileTransferLogger:
     def log_error(self, error_message):
         # Hataları logla
         self.logger.error(error_message)
-
-
-# Örnek kullanım
-logger = FileTransferLogger("file_transfer_log.txt")
-logger.log_activity("Dosya transferi başlatıldı.")
-logger.log_error("Hata: Dosya transferi sırasında bir sorun oluştu.")

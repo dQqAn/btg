@@ -1,9 +1,6 @@
 import socket
+
 import ssl
-import http.server
-from http.client import HTTPSConnection
-from os import system
-from os.path import join
 
 # pip install flask
 

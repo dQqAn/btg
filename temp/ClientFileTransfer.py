@@ -1,6 +1,3 @@
-import socket
-import ssl
-
 from FileEncryption import FileEncryption
 from SecureConnection import SecureConnection
 

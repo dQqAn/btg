@@ -17,10 +17,11 @@ if __name__ == '__main__':
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 """
 
+import socket
+
+import ssl
 from SecureConnection import SecureConnection
 from UserManagement import UserManagement
-import socket
-import ssl
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 wrap_socket = ssl.wrap_socket(sock, ca_certs='ssl/certificate.pem')
@@ -42,9 +43,9 @@ while not control:
             control = True
             print("Başarıyla giriş yapıldı.")
             secure_connection.connect()
-            # secure_connection.send_message("ada")
+            secure_connection.send_message("ada")
             # secure_connection.send_file("temp.txt")
-            secure_connection.send_file("ert.png")
+            # secure_connection.send_file("ert.png")
             # secure_connection.send_message("!DISCONNECT")
         else:
             print("Kullanıcı adı veya şifre hatalı.")
