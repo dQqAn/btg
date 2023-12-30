@@ -25,14 +25,6 @@ class SecureConnection:
         # self.wrap_socket = ssl.wrap_socket(self.socket, ca_certs='ssl/certificate.pem')
 
     def connect(self):
-        # soket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # soket.connect((self.host, self.port))
-
-        # context = ssl.create_default_context()
-        # with socket.create_connection((self.host, self.port)) as sock:
-        #     with context.wrap_socket(sock, server_hostname=self.host) as ssock:
-        #         print(ssock.version())
-
         # context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
         # context.verify_mode = ssl.CERT_REQUIRED
         # # context.load_verify_locations('files/server.pem')
@@ -47,11 +39,11 @@ class SecureConnection:
         # server_sock.connect((self.host, self.port))
         # print(f"Güvenli bağlantı başarıyla kuruldu: {self.host}:{self.port}")
 
-        # soket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # client_ssl = ssl.wrap_socket(soket, ca_certs='ssl/certificate.pem')
-        # client_ssl.connect((self.host, self.port))
-
+        self.wrap_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.wrap_socket = ssl.wrap_socket(self.wrap_socket, ca_certs='ssl/certificate.pem')
         self.wrap_socket.connect((self.host, self.port))
+
+        # self.wrap_socket.connect((self.host, self.port))
 
     def send_message(self, message):
         # self.wrap_socket.write(message.encode())
@@ -92,43 +84,3 @@ class SecureConnection:
         msg = self.wrap_socket.recv(SIZE).decode(FORMAT)
         print(f"[SERVER]: {msg}")
         file.close()
-
-    def establish_connection(self):
-        # Socket oluştur
-        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        # SSL/TLS bağlantısını kur
-        # secure_socket = self.context.wrap_socket(client_socket, server_hostname=self.host)
-        secure_socket = ssl.wrap_socket(client_socket, ca_certs=None, cert_reqs=ssl.CERT_REQUIRED)
-        # secure_socket = ssl.wrap_socket(client_socket, ca_certs='cert.pem',
-        #                                 cert_reqs=ssl.CERT_REQUIRED,
-        #                                 ssl_version=ssl.PROTOCOL_TLSv1)
-
-        try:
-            # Bağlantıyı kur
-            secure_socket.connect((self.host, self.port))
-            print(f"Güvenli bağlantı başarıyla kuruldu: {self.host}:{self.port}")
-            # return secure_socket
-        except Exception as e:
-            print(f"Hata: {e}")
-            # return None
-        finally:
-            # Bağlantıyı kapat
-            secure_socket.close()
-
-        def veri_gonder(self, veri):
-            ssl_baglanti = self.baglan()
-
-            # Veriyi gönder
-            ssl_baglanti.sendall(veri.encode())
-
-            # Cevabı al
-            cevap = ssl_baglanti.recv(1024).decode()
-
-            ssl_baglanti.close()
-
-            return cevap
-
-# Örnek kullanım
-# secure_connection = SecureConnection("example.com", 443)
-# secure_connection.establish_connection()

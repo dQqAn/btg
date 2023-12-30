@@ -21,23 +21,3 @@ class UserManagement:
                     return True
 
         return False
-
-
-"""
- # Sunucu tarafında kullanıcı bilgilerini saklayan dosya yolu
-user_file_path = "users.txt"
-
-# Kullanıcı yönetimi sınıfını başlat
-user_manager = UserManagement(user_file_path)
-
-# Kullanıcı kaydı
-user_manager.register_user("kullanici1", "parola123")
-
-# Kullanıcı girişi
-login_result = user_manager.login("kullanici1", "parola123")
-
-if login_result:
-    print("Başarıyla giriş yapıldı.")
-else:
-    print("Kullanıcı adı veya şifre hatalı.")
-"""
