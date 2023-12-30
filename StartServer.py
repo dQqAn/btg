@@ -1,6 +1,7 @@
 import socket
 
 import ssl
+from UserManagement import UserManagement
 from temp.FileTransferLogger import FileTransferLogger
 
 DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -9,6 +10,8 @@ if __name__ == '__main__':
 
     logger_file_name = "file_transfer_log.txt"
     logger = FileTransferLogger(logger_file_name)
+
+    user_manager = UserManagement("Users.txt")
 
     host = '127.0.0.1'
     # host = socket.gethostbyname(socket.gethostname())
@@ -39,7 +42,7 @@ if __name__ == '__main__':
 
     while True:
         conn, addr = sock.accept()
-        connections.append(conn)
+
         userCount += 1
         print(f'Connected with client {addr}', userCount)
         logger.log_activity(f'Connected with client {addr} - {userCount}')
@@ -50,6 +53,7 @@ if __name__ == '__main__':
             keyfile='ssl/key.pem',
             ssl_version=ssl.PROTOCOL_TLSv1
         )
+        connections.append(server_ssl)
 
         connected = True
         while connected:
@@ -67,10 +71,11 @@ if __name__ == '__main__':
                 if not data:
                     break
                 if str(data) == str(DISCONNECT_MESSAGE):
+                    server_ssl.send("Message received".encode(FORMAT))
                     print('Disconnected with client', userCount)
                     logger.log_activity(f'Disconnected with client {addr} - {userCount}')
                     userCount -= 1
-                    server_ssl.send("Message received".encode(FORMAT))
+                    connections.remove(server_ssl)
                     server_ssl.close()
                     connected = False
                 elif str(data) == str("file"):
@@ -98,17 +103,49 @@ if __name__ == '__main__':
                 elif str(data) == str("log"):
                     file = open(logger_file_name, "rb")
                     server_ssl.send(file.read())
+                elif str(data) == str("login"):
+                    server_ssl.send("Login".encode(FORMAT))
+
+                    user_name = server_ssl.recv(SIZE).decode(FORMAT)
+                    if not user_name:
+                        break
+                    server_ssl.send(user_name.encode(FORMAT))
+
+                    user_pwd = server_ssl.recv(SIZE).decode(FORMAT)
+                    if not user_pwd:
+                        break
+                    server_ssl.send(user_pwd.encode(FORMAT))
+
+                    login_info = server_ssl.recv(SIZE).decode(FORMAT)
+                    if not login_info:
+                        break
+
+                    if str(login_info) == "sign_in":
+                        login_result = user_manager.login(user_name, user_pwd)
+                        if not login_result:
+                            server_ssl.send("False".encode(FORMAT))
+                            print('Disconnected with client', userCount)
+                            logger.log_activity(f'Disconnected with client {addr} - {userCount}')
+                            userCount -= 1
+                            connections.remove(server_ssl)
+                            server_ssl.close()
+                            connected = False
+                        else:
+                            server_ssl.send("True".encode(FORMAT))
+                    else:
+                        user_manager.register_user(user_name, user_pwd)
+                        server_ssl.send("True".encode(FORMAT))
                 else:
                     server_ssl.send("Message received".encode(FORMAT))
                 print("Data:", data)
             except Exception as e:
                 print("Server error:", e)
                 logger.log_error(f"Server error: {e}")
+                # Closing all Connections
+                for cons in connections:
+                    cons.close()
                 sock.close()
+                connected = False
                 break
 
     logger.log_activity(f'Server closed')
-
-# Closing all Connections
-# for conn in connections:
-#     conn[0].close()

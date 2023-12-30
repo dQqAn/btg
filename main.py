@@ -21,39 +21,39 @@ import socket
 
 import ssl
 from SecureConnection import SecureConnection
-from UserManagement import UserManagement
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 wrap_socket = ssl.wrap_socket(sock, ca_certs='ssl/certificate.pem')
 secure_connection = SecureConnection(sock, wrap_socket)
 
-user_manager = UserManagement("Users.txt")
-
 control = False
+DISCONNECT_MESSAGE = "!DISCONNECT"
 
 while not control:
 
-    login = int(input('Sign in: 1, Sign Up: 2 \n'))
-    userName = (input('userName: '))
-    userPwd = (input('userPwd: '))
+    login = int(input('Sign in: 1, Sign Up: 2 -> '))
+    userName = str(input('userName: '))
+    userPwd = str(input('userPwd: '))
 
     if login == 1:
-        login_result = user_manager.login(userName, userPwd)
-        if login_result:
+        login_result = secure_connection.login("sign_in", userName, userPwd)
+
+        if str(login_result) == "True":
             control = True
-            print("Başarıyla giriş yapıldı.")
-            secure_connection.connect()
-            # secure_connection.send_message("ada")
+            print("Login success.")
+            secure_connection.send_message("yum")
             # secure_connection.send_file("temp.txt")
-            secure_connection.show_log()
+            # secure_connection.show_log()
             # secure_connection.send_file("ert.png")
-            # secure_connection.send_message("!DISCONNECT")
+            # secure_connection.send_message(DISCONNECT_MESSAGE)
+            secure_connection.close_conn()
         else:
-            print("Kullanıcı adı veya şifre hatalı.")
+            print("Wrong user name or password.")
+            secure_connection.close_conn()
     elif login == 2:
-        user_manager.register_user(userName, userPwd)
+        secure_connection.login("sign_up", userName, userPwd)
         control = True
-        print("Kayıt yapıldı.")
-        secure_connection.connect()
+        print("Register success.")
     else:
-        print("Geçersiz komut.")
+        print("Unknown command.")
+        secure_connection.close_conn()

@@ -6,6 +6,7 @@ import ssl
 
 FORMAT = "utf-8"
 SIZE = 1024
+DISCONNECT_MESSAGE = "!DISCONNECT"
 
 
 class SecureConnection:
@@ -89,3 +90,27 @@ class SecureConnection:
         data_control = "log".encode(FORMAT)
         self.wrap_socket.send(data_control)
         print(self.wrap_socket.recv(2048).decode(FORMAT))
+
+    def login(self, login_info, user_name, user_password):
+        self.connect()
+
+        data_control = "login".encode(FORMAT)
+        self.wrap_socket.send(data_control)
+        self.wrap_socket.recv(2048).decode(FORMAT)
+
+        temp_user_name = user_name.encode(FORMAT)
+        self.wrap_socket.send(temp_user_name)
+        self.wrap_socket.recv(2048).decode(FORMAT)
+
+        temp_user_password = user_password.encode(FORMAT)
+        self.wrap_socket.send(temp_user_password)
+        self.wrap_socket.recv(2048).decode(FORMAT)
+
+        data_control = login_info.encode(FORMAT)
+        self.wrap_socket.send(data_control)
+        login_result = self.wrap_socket.recv(2048).decode(FORMAT)
+        return login_result
+
+    def close_conn(self):
+        # self.send_message(DISCONNECT_MESSAGE)
+        self.wrap_socket.close()
