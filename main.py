@@ -18,8 +18,8 @@ if __name__ == '__main__':
 """
 
 import socket
-
 import ssl
+
 from SecureConnection import SecureConnection
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,7 +34,6 @@ while not control:
     login = int(input('Sign in: 1, Sign Up: 2 -> '))
     userName = str(input('userName: '))
     userPwd = str(input('userPwd: '))
-    # is_admin = bool(input('Admin: True or False'))
 
     if login == 1:
         login_result = secure_connection.login("sign_in", userName, userPwd)
@@ -52,7 +51,8 @@ while not control:
             print("Wrong user name or password.")
             secure_connection.close_conn()
     elif login == 2:
-        secure_connection.login("sign_up", userName, userPwd)
+        is_admin = input('Admin: True or False -> ')
+        secure_connection.login("sign_up", userName, userPwd, is_admin)
         control = True
         print("Register success.")
     else:

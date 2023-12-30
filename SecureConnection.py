@@ -101,7 +101,7 @@ class SecureConnection:
 
         print(self.wrap_socket.recv(2048).decode(FORMAT))
 
-    def login(self, login_info, user_name, user_password):
+    def login(self, login_info, user_name, user_password, is_admin=False):
         self.connect()
 
         data_control = "login".encode(FORMAT)
@@ -114,6 +114,10 @@ class SecureConnection:
 
         temp_user_password = user_password.encode(FORMAT)
         self.wrap_socket.send(temp_user_password)
+        self.wrap_socket.recv(2048).decode(FORMAT)
+
+        temp_is_admin = f"{is_admin}".encode(FORMAT)
+        self.wrap_socket.send(temp_is_admin)
         self.wrap_socket.recv(2048).decode(FORMAT)
 
         data_control = login_info.encode(FORMAT)

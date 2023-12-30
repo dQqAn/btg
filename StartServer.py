@@ -133,6 +133,11 @@ if __name__ == '__main__':
                         break
                     server_ssl.send(user_pwd.encode(FORMAT))
 
+                    is_admin = server_ssl.recv(SIZE).decode(FORMAT)
+                    if not is_admin:
+                        break
+                    server_ssl.send(is_admin.encode(FORMAT))
+
                     login_info = server_ssl.recv(SIZE).decode(FORMAT)
                     if not login_info:
                         break
@@ -150,7 +155,7 @@ if __name__ == '__main__':
                         else:
                             server_ssl.send("True".encode(FORMAT))
                     else:
-                        user_manager.register_user(user_name, user_pwd)
+                        user_manager.register_user(user_name, user_pwd, is_admin)
                         server_ssl.send("True".encode(FORMAT))
                 else:
                     server_ssl.send("Message received".encode(FORMAT))
