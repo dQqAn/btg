@@ -29,6 +29,24 @@ secure_connection = SecureConnection(sock, wrap_socket)
 control = False
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
+
+def menu(user_name, user_pwd):
+    menu_control = True
+    while menu_control:
+        menu_option = int(input("1. Send File \n2. Send Message \n3. Show Log \n4. Exit \n-> "))
+        if menu_option == 1:
+            file_name = str(input("File name -> "))
+            secure_connection.send_file(file_name)
+        elif menu_option == 2:
+            message = str(input("Message -> "))
+            secure_connection.send_message(message)
+        elif menu_option == 3:
+            secure_connection.show_log(user_name, user_pwd)
+        elif menu_option == 4:
+            secure_connection.close_conn()
+            menu_control = False
+
+
 while not control:
 
     login = int(input('Sign in: 1, Sign Up: 2 -> '))
@@ -39,22 +57,18 @@ while not control:
         login_result = secure_connection.login("sign_in", userName, userPwd)
 
         if str(login_result) == "True":
-            control = True
             print("Login success.")
-            # secure_connection.send_message("yum")
-            # secure_connection.send_file("temp.txt")
-            # secure_connection.show_log(userName, userPwd)
-            secure_connection.send_file("ert.png")
-            # secure_connection.send_message(DISCONNECT_MESSAGE)
-            secure_connection.close_conn()
+            menu(userName, userPwd)
+            control = True
         else:
             print("Wrong user name or password.")
             secure_connection.close_conn()
     elif login == 2:
         is_admin = input('Admin: True or False -> ')
         secure_connection.login("sign_up", userName, userPwd, is_admin)
-        control = True
         print("Register success.")
+        menu(userName, userPwd)
+        control = True
     else:
         print("Unknown command.")
         secure_connection.close_conn()

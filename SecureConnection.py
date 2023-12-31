@@ -132,5 +132,5 @@ class SecureConnection:
         return login_result
 
     def close_conn(self):
-        # self.send_message(DISCONNECT_MESSAGE)
+        self.send_message(DISCONNECT_MESSAGE)
         self.wrap_socket.close()

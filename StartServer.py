@@ -164,7 +164,7 @@ if __name__ == '__main__':
                         server_ssl.send("True".encode(FORMAT))
                 else:
                     server_ssl.send("Message received".encode(FORMAT))
-                print("Data:", data)
+                # print("Data:", data)
             except Exception as e:
                 print("Server error:", e)
                 logger.log_error(f"Server error: {e}")
