@@ -81,6 +81,11 @@ if __name__ == '__main__':
                 elif str(data) == str("file"):
                     server_ssl.send("File received".encode(FORMAT))
 
+                    original_md5 = server_ssl.recv(SIZE).decode(FORMAT)
+                    if not original_md5:
+                        break
+                    server_ssl.send(original_md5.encode(FORMAT))
+
                     filename = server_ssl.recv(SIZE).decode(FORMAT)
                     if not filename:
                         break

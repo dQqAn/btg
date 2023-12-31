@@ -18,8 +18,8 @@ if __name__ == '__main__':
 """
 
 import socket
-import ssl
 
+import ssl
 from SecureConnection import SecureConnection
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -43,8 +43,8 @@ while not control:
             print("Login success.")
             # secure_connection.send_message("yum")
             # secure_connection.send_file("temp.txt")
-            secure_connection.show_log(userName, userPwd)
-            # secure_connection.send_file("ert.png")
+            # secure_connection.show_log(userName, userPwd)
+            secure_connection.send_file("ert.png")
             # secure_connection.send_message(DISCONNECT_MESSAGE)
             secure_connection.close_conn()
         else:

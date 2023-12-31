@@ -1,3 +1,4 @@
+import hashlib
 import socket
 
 import ssl
@@ -76,6 +77,11 @@ class SecureConnection:
 
         # file = open(file_name, "r")
         file = open(file_name, "rb")
+
+        original_md5 = self.calculate_md5(file_name)
+        self.wrap_socket.send(original_md5.encode(FORMAT))
+        self.wrap_socket.recv(2048).decode(FORMAT)
+
         data = file.read()
         self.wrap_socket.send(file_name.encode(FORMAT))
         msg = self.wrap_socket.recv(SIZE).decode(FORMAT)
@@ -128,3 +134,12 @@ class SecureConnection:
     def close_conn(self):
         # self.send_message(DISCONNECT_MESSAGE)
         self.wrap_socket.close()
+
+    def calculate_md5(self, file_name):
+        # Dosyanın MD5 hash'ini hesapla
+        md5_hash = hashlib.md5()
+        with open(file_name, 'rb') as file:
+            # Dosyanın içeriğini oku ve hash'e ekle
+            while chunk := file.read(8192):
+                md5_hash.update(chunk)
+        return md5_hash.hexdigest()
