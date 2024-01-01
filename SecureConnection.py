@@ -105,7 +105,10 @@ class SecureConnection:
         self.wrap_socket.send(temp_user_password)
         self.wrap_socket.recv(2048).decode(FORMAT)
 
-        print(self.wrap_socket.recv(2048).decode(FORMAT))
+        data_length = self.wrap_socket.recv(2048).decode(FORMAT)
+        data_length = int(data_length)
+        log = self.wrap_socket.recv(data_length).decode(FORMAT)
+        print(log)
 
     def login(self, login_info, user_name, user_password, is_admin=False):
         self.connect()

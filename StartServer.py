@@ -87,7 +87,18 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                 is_admin = user_manager.is_admin(user_name, user_pwd)
                 if is_admin:
                     file = open(logger_file_name, "rb")
-                    server_ssl.send(file.read())
+
+                    temp_log = file.read()
+
+                    data_length = len(temp_log)
+                    send_data_length = str(data_length).encode(FORMAT)
+                    send_data_length += b' ' * (SIZE - len(send_data_length))
+                    if int(send_data_length) >= 16384:
+                        server_ssl.send(b'8192')
+                    else:
+                        server_ssl.send(b'4098')
+
+                    server_ssl.send(temp_log)
                     file.close()
                 else:
                     server_ssl.send("You are not admin.".encode(FORMAT))
@@ -168,6 +179,7 @@ if __name__ == '__main__':
 
     FORMAT = "utf-8"
     SIZE = 1024
+    # SIZE = 64
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((host, port))
