@@ -9,7 +9,7 @@ DISCONNECT_MESSAGE = "!DISCONNECT"
 
 
 def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr):
-    userCount += 1
+    # userCount += 1
     print(f'Connected with client {addr}', userCount)
     logger.log_activity(f'Connected with client {addr} - {userCount}')
     server_ssl = ssl.wrap_socket(
@@ -40,7 +40,7 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                 server_ssl.send("Message received".encode(FORMAT))
                 print('Disconnected with client', userCount)
                 logger.log_activity(f'Disconnected with client {addr} - {userCount}')
-                userCount -= 1
+                # userCount -= 1
                 connections.remove(server_ssl)
                 server_ssl.close()
                 connected = False
@@ -119,7 +119,7 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                         server_ssl.send("False".encode(FORMAT))
                         print('Disconnected with client', userCount)
                         logger.log_activity(f'Disconnected with client {addr} - {userCount}')
-                        userCount -= 1
+                        # userCount -= 1
                         connections.remove(server_ssl)
                         server_ssl.close()
                         connected = False
@@ -177,6 +177,7 @@ if __name__ == '__main__':
 
     while True:
         conn, addr = sock.accept()
+        userCount = threading.activeCount()
         # handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr)
         thread = threading.Thread(target=handle_client,
                                   args=(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr))
