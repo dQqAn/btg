@@ -110,7 +110,7 @@ class SecureConnection:
         # log = self.wrap_socket.recv(data_length).decode(FORMAT)
         # print(log)
 
-        print(self.wrap_socket.recv(2048).decode(FORMAT))
+        print(self.wrap_socket.recv(8192).decode(FORMAT))
 
     def login(self, login_info, user_name, user_password, is_admin=False):
         self.connect()
