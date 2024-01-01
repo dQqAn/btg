@@ -94,11 +94,13 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                     send_data_length = str(data_length).encode(FORMAT)
                     send_data_length += b' ' * (SIZE - len(send_data_length))
                     if int(send_data_length) >= 16384:
-                        server_ssl.send(b'8192')
+                        # server_ssl.send(b'8192')
+                        send_data_length = 8192
                     else:
-                        server_ssl.send(b'4098')
+                        # server_ssl.send(b'4096')
+                        send_data_length = 4096
 
-                    server_ssl.send(temp_log)
+                    server_ssl.send(temp_log[-send_data_length:])
                     file.close()
                 else:
                     server_ssl.send("You are not admin.".encode(FORMAT))
