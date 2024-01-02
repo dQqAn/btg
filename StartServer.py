@@ -2,7 +2,7 @@ import socket
 import threading
 
 import ssl
-from FileTransferLogger import FileTransferLogger
+from ServerLogger import ServerLogger
 from UserManagement import UserManagement
 
 DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -151,7 +151,7 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
 
 if __name__ == '__main__':
     logger_file_name = "file_transfer_log.txt"
-    logger = FileTransferLogger(logger_file_name)
+    logger = ServerLogger(logger_file_name)
 
     user_manager = UserManagement("Users.txt")
 

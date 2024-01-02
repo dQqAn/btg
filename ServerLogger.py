@@ -1,7 +1,7 @@
 import logging
 
 
-class FileTransferLogger:
+class ServerLogger:
     def __init__(self, log_file_path):
         logging.basicConfig(filename=log_file_path, level=logging.INFO)
         self.logger = logging.getLogger("file_transfer_logger")
