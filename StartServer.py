@@ -150,7 +150,7 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
 
 
 if __name__ == '__main__':
-    logger_file_name = "file_transfer_log.txt"
+    logger_file_name = "server_logger.txt"
     logger = ServerLogger(logger_file_name)
 
     user_manager = UserManagement("Users.txt")
