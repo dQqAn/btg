@@ -142,15 +142,27 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                     user_manager.register_user(user_name, user_pwd, is_admin)
                     server_ssl.send("True".encode(FORMAT))
             else:
-                server_ssl.send("Message received".encode(FORMAT))
+                if str(data) != str("message"):
+                    for cons in connections:
+                        # cons.settimeout(5)
+
+                        if cons != server_ssl:
+                            cons.send(data.encode(FORMAT))
+                        else:
+                            cons.send("Message sent".encode(FORMAT))
+                else:
+                    server_ssl.send("Message received".encode(FORMAT))
             # print("Data:", data)
         except Exception as e:
-            print("Server error:", e)
-            logger.log_error(f"Server error: {e}")
+            connections.remove(server_ssl)
+            print("Client status:", e)
+            logger.log_error(f"Client status: {e}")
+            server_ssl.close()
             # Closing all Connections
-            for cons in connections:
-                cons.close()
-            sock.close()
+            # for cons in connections:
+            #     if server_ssl == cons:
+            #         server_ssl.close()
+            # sock.close()
             connected = False
             break
 

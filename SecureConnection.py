@@ -139,3 +139,20 @@ class SecureConnection:
     def close_conn(self):
         self.send_message(DISCONNECT_MESSAGE)
         self.wrap_socket.close()
+
+    def receive_message(self):
+        while True:
+            message = self.wrap_socket.recv(1024).decode('utf-8')
+            if not message:
+                break
+            print("Message arrived ->", message)
+            break
+            # while True:
+            #     try:
+            #         message = wrap_socket.recv(1024).decode('utf-8')
+            #         if not message:
+            #             break
+            #         print("Message arrived ->", message)
+            #     except Exception as e:
+            #         # print(f"Error: {e}")
+            #         break
