@@ -123,7 +123,7 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                         server_ssl.send("False".encode(FORMAT))
                         print('Disconnected with client', userCount)
                         logger.log_activity(f'Disconnected with client {addr} - {userCount}')
-                        # userCount -= 1
+
                         connections.remove(server_ssl)
                         server_ssl.close()
                         connected = False
