@@ -34,7 +34,8 @@ def menu(user_name, user_pwd):
     menu_control = True
     while menu_control:
 
-        menu_option = int(input("1. Send File \n2. Send Message \n3. Show Log \n4. Listen Message \n5. Exit \n-> "))
+        menu_option = int(input(
+            "1. Send File \n2. Send Message \n3. Show Log \n4. Listen Message \n5. Listen File \n6. Exit \n-> "))
 
         if menu_option == 1:
             file_name = str(input("File name -> "))
@@ -45,12 +46,14 @@ def menu(user_name, user_pwd):
         elif menu_option == 3:
             secure_connection.show_log(user_name, user_pwd)
         elif menu_option == 4:
-            secure_connection.receive_message()
+            secure_connection.listen_message()
 
             # message_thread = threading.Thread(target=secure_connection.receive_messages, args=())
             # message_thread.start()
             # message_thread.join(timeout=5) # snooze for 5 second
         elif menu_option == 5:
+            secure_connection.listen_file()
+        elif menu_option == 6:
             secure_connection.close_conn()
             menu_control = False
 

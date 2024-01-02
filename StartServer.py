@@ -50,7 +50,8 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                 original_md5 = server_ssl.recv(SIZE).decode(FORMAT)
                 if not original_md5:
                     break
-                server_ssl.send(original_md5.encode(FORMAT))
+                for cons in connections:
+                    cons.send(original_md5.encode(FORMAT))
 
                 filename = server_ssl.recv(SIZE).decode(FORMAT)
                 if not filename:
@@ -58,7 +59,11 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                 print(f"[RECV] Receiving the filename:", filename)
                 logger.log_activity(f'[RECV] {addr} - {userCount} Receiving the filename: {filename}')
                 # file = open(f"data/{filename}", "w")
-                file = open(f"data/{filename}", "wb")
+                # file = open(f"data/{filename}", "wb")
+                for cons in connections:
+                    if cons != server_ssl:
+                        cons.send(filename.encode(FORMAT))
+
                 server_ssl.send("Filename received.".encode(FORMAT))
 
                 # file_data = server_ssl.recv(SIZE).decode(FORMAT)
@@ -68,9 +73,13 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                 print(f"[RECV] Receiving the file data:", file_data)
                 logger.log_activity(f'[RECV] {addr} - {userCount} Receiving the file data: {file_data}')
                 # print(f"[RECV] Receiving the file data:", file_data.decode('ISO-8859-1'))
-                file.write(file_data)
+                # file.write(file_data)
+                for cons in connections:
+                    if cons != server_ssl:
+                        cons.send(file_data)
+
                 server_ssl.send("File data received".encode(FORMAT))
-                file.close()
+                # file.close()
             elif str(data) == str("log"):
                 server_ssl.send("Log".encode(FORMAT))
 
@@ -163,7 +172,7 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
             #     if server_ssl == cons:
             #         server_ssl.close()
             # sock.close()
-            connected = False
+            # connected = False
             break
 
 

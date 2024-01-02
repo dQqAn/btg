@@ -1,3 +1,4 @@
+import os
 import socket
 
 import ssl
@@ -140,7 +141,7 @@ class SecureConnection:
         self.send_message(DISCONNECT_MESSAGE)
         self.wrap_socket.close()
 
-    def receive_message(self):
+    def listen_message(self):
         while True:
             message = self.wrap_socket.recv(1024).decode('utf-8')
             if not message:
@@ -156,3 +157,32 @@ class SecureConnection:
             #     except Exception as e:
             #         # print(f"Error: {e}")
             #         break
+
+    def listen_file(self):
+        while True:
+            original_md5 = self.wrap_socket.recv(1024).decode('utf-8')
+            if not original_md5:
+                break
+            # print("original_md5 arrived ->", original_md5)
+
+            filename = self.wrap_socket.recv(1024).decode('utf-8')
+            if not filename:
+                break
+            # print("filename arrived ->", filename)
+
+            file_data: bytes = self.wrap_socket.recv(1024)
+            if not file_data:
+                break
+            # print("file_data arrived ->", file_data)
+
+            file = open(f"data/{filename}", "wb")
+            file.write(file_data)
+            file.close()
+            temp_md5 = FileEncryption().calculate_md5(f"data/{filename}")
+            if temp_md5 == original_md5:
+                print("File received:", filename)
+            else:
+                os.remove(f"data/{filename}")
+                print("Wrong MD5!")
+
+            break
