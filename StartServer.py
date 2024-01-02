@@ -2,8 +2,8 @@ import socket
 import threading
 
 import ssl
+from FileTransferLogger import FileTransferLogger
 from UserManagement import UserManagement
-from temp.FileTransferLogger import FileTransferLogger
 
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
