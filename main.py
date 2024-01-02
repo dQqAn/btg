@@ -1,22 +1,3 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-"""
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
-"""
-
 import socket
 
 import ssl
@@ -47,10 +28,6 @@ def menu(user_name, user_pwd):
             secure_connection.show_log(user_name, user_pwd)
         elif menu_option == 4:
             secure_connection.listen_message()
-
-            # message_thread = threading.Thread(target=secure_connection.receive_messages, args=())
-            # message_thread.start()
-            # message_thread.join(timeout=5) # snooze for 5 second
         elif menu_option == 5:
             secure_connection.listen_file()
         elif menu_option == 6:

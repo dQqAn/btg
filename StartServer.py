@@ -9,7 +9,6 @@ DISCONNECT_MESSAGE = "!DISCONNECT"
 
 
 def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr):
-    # userCount += 1
     print(f'Connected with client {addr}', userCount)
     logger.log_activity(f'Connected with client {addr} - {userCount}')
     server_ssl = ssl.wrap_socket(
@@ -23,15 +22,6 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
 
     connected = True
     while connected:
-        # data = server_ssl.recv(1024)
-        # data = server_ssl.read()
-
-        # data_length = server_ssl.recv(SIZE).decode(FORMAT)
-        # if not data_length:
-        #     break
-        # data_length = int(data_length)
-        # data = server_ssl.recv(data_length).decode(FORMAT)
-
         try:
             data = server_ssl.recv(SIZE).decode(FORMAT)
             if not data:
@@ -40,7 +30,7 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                 server_ssl.send("Message received".encode(FORMAT))
                 print('Disconnected with client', userCount)
                 logger.log_activity(f'Disconnected with client {addr} - {userCount}')
-                # userCount -= 1
+
                 connections.remove(server_ssl)
                 server_ssl.close()
                 connected = False
@@ -58,28 +48,22 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                     break
                 print(f"[RECV] Receiving the filename:", filename)
                 logger.log_activity(f'[RECV] {addr} - {userCount} Receiving the filename: {filename}')
-                # file = open(f"data/{filename}", "w")
-                # file = open(f"data/{filename}", "wb")
                 for cons in connections:
                     if cons != server_ssl:
                         cons.send(filename.encode(FORMAT))
 
                 server_ssl.send("Filename received.".encode(FORMAT))
 
-                # file_data = server_ssl.recv(SIZE).decode(FORMAT)
                 file_data = server_ssl.recv(SIZE)
                 if not file_data:
                     break
                 print(f"[RECV] Receiving the file data:", file_data)
                 logger.log_activity(f'[RECV] {addr} - {userCount} Receiving the file data: {file_data}')
-                # print(f"[RECV] Receiving the file data:", file_data.decode('ISO-8859-1'))
-                # file.write(file_data)
                 for cons in connections:
                     if cons != server_ssl:
                         cons.send(file_data)
 
                 server_ssl.send("File data received".encode(FORMAT))
-                # file.close()
             elif str(data) == str("log"):
                 server_ssl.send("Log".encode(FORMAT))
 
@@ -103,10 +87,8 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                     send_data_length = str(data_length).encode(FORMAT)
                     send_data_length += b' ' * (SIZE - len(send_data_length))
                     if int(send_data_length) >= 16384:
-                        # server_ssl.send(b'8192')
                         send_data_length = 8192
                     else:
-                        # server_ssl.send(b'4096')
                         send_data_length = 4096
 
                     server_ssl.send(temp_log[-send_data_length:])
@@ -153,26 +135,17 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
             else:
                 if str(data) != str("message"):
                     for cons in connections:
-                        # cons.settimeout(5)
-
                         if cons != server_ssl:
                             cons.send(data.encode(FORMAT))
                         else:
                             cons.send("Message sent".encode(FORMAT))
                 else:
                     server_ssl.send("Message received".encode(FORMAT))
-            # print("Data:", data)
         except Exception as e:
             connections.remove(server_ssl)
             print("Client status:", e)
             logger.log_error(f"Client status: {e}")
             server_ssl.close()
-            # Closing all Connections
-            # for cons in connections:
-            #     if server_ssl == cons:
-            #         server_ssl.close()
-            # sock.close()
-            # connected = False
             break
 
 
@@ -183,26 +156,13 @@ if __name__ == '__main__':
     user_manager = UserManagement("Users.txt")
 
     host = '127.0.0.1'
-    # host = socket.gethostbyname(socket.gethostname())
-    # port = 8080
-    # port = 8443
-    # port = 8060
     port = 4455
-
-    # totalclient = int(input('Enter number of clients: '))
-
-    # context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    # context.load_cert_chain(certfile='ssl/certificate.pem', keyfile='ssl/key.pem')
-    # server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
-    # server_sock.bind((host, port))
-    # server_sock.listen()
 
     connections = []
     userCount = 0
 
     FORMAT = "utf-8"
     SIZE = 1024
-    # SIZE = 64
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((host, port))
@@ -213,10 +173,8 @@ if __name__ == '__main__':
     while True:
         conn, addr = sock.accept()
         userCount = threading.activeCount()
-        # handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr)
         thread = threading.Thread(target=handle_client,
                                   args=(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr))
         thread.start()
-        # print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
 
     logger.log_activity(f'Server closed')
