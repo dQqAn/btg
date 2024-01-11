@@ -121,12 +121,6 @@ def handle_client(connections, userCount, FORMAT, SIZE, sock, logger, conn, addr
                     login_result = user_manager.login(user_name, user_pwd)
                     if not login_result:
                         server_ssl.send("False".encode(FORMAT))
-                        print('Disconnected with client', userCount)
-                        logger.log_activity(f'Disconnected with client {addr} - {userCount}')
-
-                        connections.remove(server_ssl)
-                        server_ssl.close()
-                        connected = False
                     else:
                         server_ssl.send("True".encode(FORMAT))
                 else:
