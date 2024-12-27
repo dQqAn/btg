@@ -2,4 +2,5 @@
 /.idea/
 /temp/
 /data/
+/server_logger.txt
 /file_transfer_log.txt
